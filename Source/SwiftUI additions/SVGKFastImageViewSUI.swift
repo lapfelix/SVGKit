@@ -1,5 +1,6 @@
 
-import SwiftUI
+/*
+ import SwiftUI
 import SVGKit
 
 @available(iOS 13.0, tvOS 13.0, *)
@@ -29,3 +30,4 @@ struct SVGImage_Previews: PreviewProvider {
         SVGKFastImageViewSUI(url: .constant(URL(string:"https://dev.w3.org/SVG/tools/svgweb/samples/svg-files/android.svg")!), iconSize: .constant(50.0))
     }
 }
+*/
