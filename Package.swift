@@ -24,7 +24,8 @@ let package = Package(
             path: "Source",
             exclude: [
                 "SwiftUI additions"
-            ]
+            ],
+            publicHeadersPath: "Source/include"
         ),
         .target(
             name: "SVGKitSwift",
