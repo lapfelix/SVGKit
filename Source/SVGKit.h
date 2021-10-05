@@ -174,3 +174,8 @@ FOUNDATION_EXPORT const unsigned char SVGKitFramework_VersionString[];
 #import "NSData+NSInputStream.h"
 #import "SVGKSourceNSData.h"
 #import "SVGKInlineResource.h"
+
+#import "SVGKDefine_Private.h"
+#import "SVGKImageRep.h"
+#import "SVGKExporterNSImage.h"
+
