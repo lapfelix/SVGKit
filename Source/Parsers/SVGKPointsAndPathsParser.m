@@ -832,14 +832,24 @@ static inline CGPoint SVGCurveReflectedControlPoint(SVGCurve prevCurve)
     
     [SVGKPointsAndPathsParser readCommaAndWhitespace:scanner];
 	
-	CGPoint flags = [SVGKPointsAndPathsParser readCoordinatePair:scanner];
+	CGPoint flagsCoordinatePair = [SVGKPointsAndPathsParser readCoordinatePair:scanner];
 	
-	BOOL largeArcFlag = flags.x != 0.;
-	BOOL sweepFlag = flags.y != 0.;
+	BOOL largeArcFlag = flagsCoordinatePair.x != 0.;
+	BOOL sweepFlag = flagsCoordinatePair.y != 0.;
     
     [SVGKPointsAndPathsParser readCommaAndWhitespace:scanner];
-    
-	CGPoint endPoint = [SVGKPointsAndPathsParser readCoordinatePair:scanner];
+
+    CGPoint endPoint;
+    if ([scanner isAtEnd]) {
+        // if the scanner already reached the end, it means the flags coordinatePair we read was actually the end point
+        // and we assume both flags are false
+        endPoint = flagsCoordinatePair;
+        largeArcFlag = NO;
+        sweepFlag = NO;
+    }
+    else {
+        endPoint = [SVGKPointsAndPathsParser readCoordinatePair:scanner];
+    }
 
 	// end parsing
 
