@@ -11,10 +11,12 @@ let package = Package(
     products: [
         .library(
             name: "SVGKit",
+            type: .dynamic,
             targets: ["SVGKit"]
         ),
         .library(
             name: "SVGKitSwift",
+            type: .dynamic,
             targets: ["SVGKitSwift"]
         )
     ],
