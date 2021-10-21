@@ -848,7 +848,20 @@ static inline CGPoint SVGCurveReflectedControlPoint(SVGCurve prevCurve)
         sweepFlag = NO;
     }
     else {
-        endPoint = [SVGKPointsAndPathsParser readCoordinatePair:scanner];
+        CGPoint p;
+        [SVGKPointsAndPathsParser readCoordinate:scanner intoFloat:&p.x];
+        [SVGKPointsAndPathsParser readCommaAndWhitespace:scanner];
+        if ([scanner isAtEnd]) {
+            // if the scanner already reached the end, it means the sweep flag can be assumed to be false
+            p.y = p.x;
+            p.x = flagsCoordinatePair.y;
+            sweepFlag = NO;
+        }
+        else {
+            [SVGKPointsAndPathsParser readCoordinate:scanner intoFloat:&p.y];
+        }
+
+        endPoint = p;
     }
 
 	// end parsing
