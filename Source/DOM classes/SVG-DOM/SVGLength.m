@@ -189,7 +189,8 @@ static float cachedDevicePixelsPerInch;
 	
 	if( [platform hasPrefix:@"iPod4"]
 	   || [platform hasPrefix:@"iPod5"]
-	   || [platform hasPrefix:@"iPod7"])
+       || [platform hasPrefix:@"iPod7"]
+       || [platform hasPrefix:@"iPod9"])
 		return 326.0f;
 	
 	if( [platform hasPrefix:@"iPod"]) // catch-all for higher-end devices not yet existing
