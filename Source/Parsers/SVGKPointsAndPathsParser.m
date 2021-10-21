@@ -853,9 +853,10 @@ static inline CGPoint SVGCurveReflectedControlPoint(SVGCurve prevCurve)
         [SVGKPointsAndPathsParser readCommaAndWhitespace:scanner];
         if ([scanner isAtEnd]) {
             // if the scanner already reached the end, it means the sweep flag can be assumed to be false
-            p.y = p.x;
-            p.x = flagsCoordinatePair.y;
-            sweepFlag = flagsCoordinatePair.x != 0;
+            //p.y = p.x;
+            //p.x = flagsCoordinatePair.y;
+            endPoint = flagsCoordinatePair;
+            sweepFlag = NO;// flagsCoordinatePair.x != 0;
             largeArcFlag = NO;
         }
         else {
