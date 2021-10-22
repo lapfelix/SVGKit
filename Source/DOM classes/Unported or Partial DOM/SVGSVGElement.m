@@ -211,14 +211,10 @@
 	 (and the renderer will IMMEDIATELY overwrite them once the parsing is finished IFF IT NEEDS TO)
 	 */
 	self.viewport = self.requestedViewport; // renderer can/will change the .viewport, but .requestedViewport can only be set by the PARSER
-	
-	if( [[self getAttribute:@"viewBox"] length] > 0 )
+
+    NSArray* boxElements = [[self getAttribute:@"viewBox"] componentsSeparatedByCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@", "]];
+	if(boxElements.count == 4)
 	{
-		NSArray* boxElements = [[self getAttribute:@"viewBox"] componentsSeparatedByString:@" "];
-		if ([boxElements count] < 2) {
-			/* count should be 4 -- maybe they're comma separated like (x,y,w,h) */
-			boxElements = [[self getAttribute:@"viewBox"] componentsSeparatedByString:@","];
-		}
 		_viewBox = SVGRectMake([[boxElements objectAtIndex:0] floatValue], [[boxElements objectAtIndex:1] floatValue], [[boxElements objectAtIndex:2] floatValue], [[boxElements objectAtIndex:3] floatValue]);
 	}
 	else
