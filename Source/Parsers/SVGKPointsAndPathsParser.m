@@ -815,7 +815,7 @@ static inline CGPoint SVGCurveReflectedControlPoint(SVGCurve prevCurve)
 	
 	CGFloat x1 = currentPt.x;
 	CGFloat y1 = currentPt.y;
-	
+
 	CGPoint radii = [SVGKPointsAndPathsParser readCoordinatePair:scanner];
 	CGFloat rx = fabs(radii.x);
 	CGFloat ry = fabs(radii.y);
@@ -834,9 +834,39 @@ static inline CGPoint SVGCurveReflectedControlPoint(SVGCurve prevCurve)
 
     NSUInteger initialLocation = scanner.scanLocation;
 	CGPoint flagsCoordinatePair = [SVGKPointsAndPathsParser readCoordinatePair:scanner];
-	
-	BOOL largeArcFlag = flagsCoordinatePair.x != 0.;
-	BOOL sweepFlag = flagsCoordinatePair.y != 0.;
+
+    BOOL largeArcFlag = NO;
+    BOOL sweepFlag = NO;
+    if ((flagsCoordinatePair.x == 0. || flagsCoordinatePair.x == 1.)
+        && (flagsCoordinatePair.y == 0 || flagsCoordinatePair.y == 1.)) {
+        // all good, we really did scan booleans
+        largeArcFlag = flagsCoordinatePair.x != 0;
+        sweepFlag = flagsCoordinatePair.y != 0.;
+    }
+    else {
+
+        //NSUInteger locationAfterFlags = scanner.scanLocation;
+        [scanner setScanLocation:initialLocation];
+
+        NSString *scannedString;
+        [scanner scanCharactersFromSet:[NSCharacterSet characterSetWithCharactersInString:@"01"] intoString:&scannedString];
+
+        NSString *first = [scannedString substringWithRange:NSMakeRange(0, 1)];
+        NSString *second = [scannedString substringWithRange:NSMakeRange(1, 1)];
+        NSLog(@"scanlenght:%@ for %@ split into ""%@"" and ""%@""", @(scannedString.length), scannedString, first, second);
+
+        if (([first isEqualToString:@"0"] || [first isEqualToString:@"1"])
+            && ([second isEqualToString:@"0"] || [second isEqualToString:@"1"])) {
+            largeArcFlag = [first isEqualToString:@"1"];
+            sweepFlag = [second isEqualToString:@"1"];
+        }
+        else {
+            // we expected booleans but we read something else
+            NSAssert(NO, @"We expected booleans but we read something else");
+        }
+
+        [scanner setScanLocation:initialLocation+3];
+    }
     
     [SVGKPointsAndPathsParser readCommaAndWhitespace:scanner];
 
