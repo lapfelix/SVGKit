@@ -831,7 +831,8 @@ static inline CGPoint SVGCurveReflectedControlPoint(SVGCurve prevCurve)
 	phi = fmod(phi, 2 * M_PI);
     
     [SVGKPointsAndPathsParser readCommaAndWhitespace:scanner];
-	
+
+    NSUInteger initialLocation = scanner.scanLocation;
 	CGPoint flagsCoordinatePair = [SVGKPointsAndPathsParser readCoordinatePair:scanner];
 	
 	BOOL largeArcFlag = flagsCoordinatePair.x != 0.;
@@ -852,12 +853,20 @@ static inline CGPoint SVGCurveReflectedControlPoint(SVGCurve prevCurve)
         [SVGKPointsAndPathsParser readCoordinate:scanner intoFloat:&p.x];
         [SVGKPointsAndPathsParser readCommaAndWhitespace:scanner];
         if ([scanner isAtEnd]) {
-            // if the scanner already reached the end, it means the sweep flag can be assumed to be false
-            //p.y = p.x;
-            //p.x = flagsCoordinatePair.y;
-            endPoint = flagsCoordinatePair;
-            sweepFlag = NO;// flagsCoordinatePair.x != 0;
-            largeArcFlag = NO;
+            // if the scanner already reached the end, it means the large arc and sweep flags were glued together
+            p.y = p.x;
+            p.x = flagsCoordinatePair.y;
+
+            NSUInteger endLocation = scanner.scanLocation;
+            [scanner setScanLocation:initialLocation];
+
+            int twinFlagsValue;
+            [scanner scanInt:&twinFlagsValue];
+
+            largeArcFlag = (twinFlagsValue >= 10);
+            sweepFlag = (twinFlagsValue % 2 == 1);
+
+            [scanner setScanLocation:endLocation];
         }
         else {
             [SVGKPointsAndPathsParser readCoordinate:scanner intoFloat:&p.y];
