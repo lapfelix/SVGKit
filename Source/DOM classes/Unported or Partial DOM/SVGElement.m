@@ -6,6 +6,7 @@
 //
 
 #import "SVGElement.h"
+#import "SVGUseElement.h"
 
 #import "SVGElement_ForParser.h" //.h" // to solve insane Xcode circular dependencies
 #import "StyleSheetList+Mutable.h"
@@ -641,7 +642,8 @@
         Node* parentElement = self.parentNode;
         while( parentElement != nil
               && ! [parentElement isKindOfClass:[SVGGElement class]]
-              && ! [parentElement isKindOfClass:[SVGSVGElement class]])
+              && ! [parentElement isKindOfClass:[SVGSVGElement class]]
+              && ! [parentElement isKindOfClass:[SVGUseElement class]])
         {
             parentElement = parentElement.parentNode;
         }
